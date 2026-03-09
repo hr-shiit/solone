@@ -7,6 +7,7 @@ export interface VestingSchedule {
 export interface VestingInfo {
   totalPurchased: number;
   tgeAmount: number;
+  cliffEndsAt?: string;
   vestedAmount: number;
   lockedAmount: number;
   claimableAmount: number;
@@ -32,6 +33,9 @@ export function calculateVesting(
   const { tgePercent, cliffDays, vestingDays } = vestingSchedule;
   
   const tgeAmount = Math.floor(totalPurchased * (tgePercent / 100));
+  
+  const cliffEndsAt = new Date(launchEndsAt);
+  cliffEndsAt.setDate(cliffEndsAt.getDate() + cliffDays);
   
   const daysSinceLaunchEnd = Math.floor(
     (currentTime.getTime() - launchEndsAt.getTime()) / (1000 * 60 * 60 * 24)
@@ -59,6 +63,7 @@ export function calculateVesting(
   return {
     totalPurchased,
     tgeAmount,
+    cliffEndsAt: cliffEndsAt.toISOString(),
     vestedAmount,
     lockedAmount,
     claimableAmount

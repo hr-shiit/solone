@@ -574,7 +574,10 @@ export const getPurchasesHandler = async (
       }
     });
 
-    return res.status(200).json(purchases);
+    return res.status(200).json({
+      purchases,
+      total: purchases.length
+    });
   } catch (error) {
     console.error('Error fetching purchases:', error);
     return res.status(500).json({ error: 'Internal server error' });
